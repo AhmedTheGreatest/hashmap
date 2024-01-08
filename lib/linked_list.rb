@@ -4,7 +4,8 @@
 class Node
   attr_accessor :value, :next_node
 
-  def initialize(value = nil, next_node = nil)
+  def initialize(key, value, next_node = nil)
+    @key = key
     @value = value
     @next_node = next_node
   end
@@ -14,18 +15,18 @@ end
 class LinkedList
   attr_reader :head
 
-  def initialize(value = nil)
-    @head = Node.new(value)
+  def initialize(key, value)
+    @head = Node.new(key, value)
   end
 
   # Appends a new node at the end of the list
-  def append(value)
-    tail.next_node = Node.new(value)
+  def append(key, value)
+    tail.next_node = Node.new(key, value)
   end
 
   # Prepends a new node at the start of the list
-  def prepend(value)
-    @head = Node.new(value, head)
+  def prepend(key, value)
+    @head = Node.new(key, value, head)
   end
 
   # Returns the size of the linked list
@@ -59,48 +60,33 @@ class LinkedList
     pop(node.next_node)
   end
 
-  # Returns true if the list contains the given value else false
-  def contains?(value, node = head)
-    # Returns true if the node contains the value
-    return true if node.value == value
+  # Returns true if the list contains the given key-value pair else false
+  def contains?(key, node = head)
+    # Returns true if the node contains the key-value pair
+    return true if node.key == key
     # Returns false if the node is the last one
     return false if last_node?(node)
 
     # Calls this method again with the next node
-    contains?(value, node.next_node)
+    contains?(key, node.next_node)
   end
 
   # Finds a node in the list and returns it
-  def find(value, node = head)
+  def find(key, node = head)
     # Returns the node if its value matches with the given value
-    return node if node.value == value
+    return node if node.key == key
     # Returns nil if the node is the last one
     return nil if last_node?(node)
 
     # Calls this method again with the next node
-    find(value, node.next_node)
-  end
-
-  # Converts the list into a string
-  def to_s
-    node = head
-    msg = ''
-
-    # Loops over all the nodes and appends their values to the msg
-    while node
-      msg += "( #{node.value} )"
-      msg += ' -> ' unless node.next_node.nil?
-      node = node.next_node
-    end
-    msg += ' -> nil'
-    msg
+    find(key, node.next_node)
   end
 
   # Inserts a node at the given index
-  def insert_at(value, index)
+  def insert_at(key, value, index)
     prev_node = at(index - 1)
     next_node = prev_node.next_node
-    prev_node.next_node = Node.new(value, next_node)
+    prev_node.next_node = Node.new(key, value, next_node)
   end
 
   # Removes the node at the given index

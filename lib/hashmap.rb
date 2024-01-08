@@ -14,8 +14,6 @@ class HashMap
     @length = 0
   end
 
-  private
-
   def hash(value)
     hash_code = 0
 

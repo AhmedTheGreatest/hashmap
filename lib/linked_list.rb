@@ -83,6 +83,8 @@ class LinkedList
 
   # Finds a node in the list and returns it
   def find(key, node = head)
+    return nil if node.nil?
+
     traverse { |node| return node if yield(node) } if block_given?
     # Returns the node if its key matches with the given key
     return node if node.key == key

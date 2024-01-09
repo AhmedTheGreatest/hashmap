@@ -83,6 +83,7 @@ class LinkedList
 
   # Finds a node in the list and returns it
   def find(key, node = head)
+    traverse { |node| return node if yield(node) } if block_given?
     # Returns the node if its key matches with the given key
     return node if node.key == key
     # Returns nil if the node is the last one
@@ -90,6 +91,10 @@ class LinkedList
 
     # Calls this method again with the next node
     find(key, node.next_node)
+  end
+
+  def remove(key)
+    @head&.key == key ? delete_head : delete_node(key)
   end
 
   # Inserts a node at the given index
@@ -107,6 +112,19 @@ class LinkedList
   end
 
   private
+
+  def delete_head
+    @head = @head.next_node
+  end
+
+  def delete_node
+    predecessor = find { |node| node.next_node&.key == key }
+    nil if predecessor.nil?
+
+    target = target.next_node
+    predecessor.next_node = target.next_node
+    target
+  end
 
   # Returns true if the given node is the last one
   def last_node?(node)

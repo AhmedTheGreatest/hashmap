@@ -5,6 +5,8 @@ require './lib/linked_list'
 
 # Implementation of a HashMap
 class HashMap
+  attr_reader :length
+
   INITIAL_CAPACITY = 16
   LOAD_FACTOR = 0.75
   HASH_PRIME_NUMBER = 31
@@ -29,6 +31,29 @@ class HashMap
       @buckets[index].prepend(key, value)
       @length += 1
     end
+  end
+
+  def get(key)
+    index = hash_index(key)
+    entry = @buckets[index]&.find(key)
+    entry&.value
+  end
+
+  def key?(key)
+    !!get(key)
+  end
+
+  def remove(key)
+    index = hash_index(key)
+    output = @buckets[index]&.remove(key)
+    @length -= 1 if output
+
+    output
+  end
+
+  def clear
+    @buckets = Array.new(capacity)
+    @length = 0
   end
 
   private
@@ -64,10 +89,10 @@ class HashMap
     @buckets.size
   end
 
-  def hash(value)
+  def hash(key)
     hash_code = 0
 
-    value.each_char { |char| hash_code = HASH_PRIME_NUMBER * hash_code + char.ord }
+    key.each_char { |char| hash_code = HASH_PRIME_NUMBER * hash_code + char.ord }
 
     hash_code
   end

@@ -2,7 +2,7 @@
 
 # A Class representing a Node in a Linked List
 class Node
-  attr_accessor :value, :next_node
+  attr_accessor :value, :key, :next_node
 
   def initialize(key, value, next_node = nil)
     @key = key
@@ -71,9 +71,19 @@ class LinkedList
     contains?(key, node.next_node)
   end
 
+  # Traverses the linked list and calls the given block
+  def traverse
+    current_node = @head
+
+    while current_node
+      yield(current_node)
+      current_node = @head.next_node
+    end
+  end
+
   # Finds a node in the list and returns it
   def find(key, node = head)
-    # Returns the node if its value matches with the given value
+    # Returns the node if its key matches with the given key
     return node if node.key == key
     # Returns nil if the node is the last one
     return nil if last_node?(node)

@@ -14,6 +14,56 @@ class HashMap
     @length = 0
   end
 
+  def set(key, value)
+    index = hash_index(key)
+    @buckets[index] ||= LinkedList.new(key, value)
+
+    entry = @buckets[index].find(key)
+
+    if entry
+      entry.value = value
+    elsif load_factor_exceeded?
+      grow_capacity
+      set(key, value)
+    else
+      @buckets[index].prepend(key, value)
+      @length += 1
+    end
+  end
+
+  private
+
+  def entries
+    @buckets.each_with_object([]) do |bucket, array|
+      next unless bucket
+
+      bucket.traverse { |entry| array << [entry.key, entry.value] }
+    end
+  end
+
+  def grow_capacity
+    current_entries = entries
+    @length = 0
+
+    @buckets = Array.new(current_capacity * 2)
+    current_entries.each { |key, value| set(key, value) }
+  end
+
+  def load_factor_exceeded?
+    (length / current_capacity) > MAX_LOAD_FACTOR
+  end
+
+  def hash_index(key)
+    index = hash(key) & current_capacity
+    raise IndexError if index.negative? || index >= @buckets.length
+
+    index
+  end
+
+  def current_capacity
+    @buckets.size
+  end
+
   def hash(value)
     hash_code = 0
 

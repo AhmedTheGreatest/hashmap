@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require './lib/hasher'
 require './lib/linked_list'
 
 # Implementation of a HashMap
@@ -60,7 +59,7 @@ class HashMap
   end
 
   def clear
-    @buckets = Array.new(capacity)
+    @buckets = Array.new(current_capacity)
     @length = 0
   end
 

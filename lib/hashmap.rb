@@ -51,6 +51,14 @@ class HashMap
     output
   end
 
+  def keys
+    entries.map(&:first)
+  end
+
+  def values
+    entries.map(&:last)
+  end
+
   def clear
     @buckets = Array.new(capacity)
     @length = 0
